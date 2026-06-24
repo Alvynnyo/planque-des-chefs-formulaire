@@ -286,41 +286,43 @@ input, textarea { font-family: inherit; }
   align-items: center;
   gap: 10px;
   background: none;
-  border: none;
-  padding: 0;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 999px;
+  padding: 9px 18px;
   cursor: pointer;
-  color: var(--color-text-muted);
+  color: var(--color-primary);
   font-family: var(--font);
-  font-size: .66rem;
-  font-weight: 400;
+  font-size: .72rem;
+  font-weight: 500;
   letter-spacing: .14em;
   text-transform: uppercase;
   margin-top: 28px;
-  transition: color .2s ease;
+  transition: background .22s ease, color .22s ease;
 }
-.btn-learn-more:hover { color: var(--color-text); }
+.btn-learn-more:hover {
+  background: var(--color-primary);
+  color: #1F1410;
+}
 .btn-learn-more:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 6px;
-  border-radius: 4px;
+  border-radius: 999px;
+}
+
+/* Pulse d'appel à l'action au premier affichage de chaque question (un seul cycle) */
+.btn-learn-more.is-pulsing {
+  animation: learnMorePulse 1.2s ease forwards;
 }
 
 .icon-circle {
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  border: 1px solid rgba(249, 209, 144, .18);
-  background: rgba(249, 209, 144, .06);
+  width: 18px; height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background .2s ease, border-color .2s ease;
+  color: inherit;
 }
-.btn-learn-more:hover .icon-circle {
-  background: rgba(249, 209, 144, .12);
-  border-color: rgba(249, 209, 144, .36);
-}
-.icon-circle svg { width: 15px; height: 15px; }
+.icon-circle svg { width: 100%; height: 100%; }
 
 /* ─── Navigation ─────────────────────────────────────────── */
 
@@ -528,22 +530,85 @@ input, textarea { font-family: inherit; }
   line-height: 1.3;
 }
 
+/* Chips cliquables dans la modal */
 .modal-options {
   list-style: none;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 8px;
 }
-.modal-options li {
+
+.modal-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-family: var(--font);
-  font-size: .82rem;
+  font-size: .78rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.3;
   color: var(--color-text);
   background: rgba(249, 209, 144, .04);
-  border-left: 2px solid rgba(185, 87, 18, .5);
-  padding: 10px 14px;
-  border-radius: 0 5px 5px 0;
+  border: 1px solid rgba(249, 209, 144, .22);
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+  user-select: none;
+}
+.modal-chip:hover {
+  background: rgba(249, 209, 144, .10);
+  border-color: rgba(249, 209, 144, .45);
+}
+
+/* Chip sélectionné — fond plein en couleur primaire */
+.modal-chip.is-selected {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #1F1410;
+}
+
+.modal-chip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* Checkmark masqué par défaut, visible sur les chips sélectionnés */
+.modal-chip-check {
+  width: 13px; height: 13px;
+  flex-shrink: 0;
+  display: none;
+}
+.modal-chip.is-selected .modal-chip-check { display: block; }
+
+/* Bouton "Valider" — affiché uniquement pour les questions à choix multiple */
+.modal-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 26px;
+  color: var(--color-text);
+  border: 1px solid rgba(249, 209, 144, .35);
+  border-radius: 999px;
+  background: none;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .18s ease;
+}
+.modal-confirm:hover {
+  background: rgba(249, 209, 144, .07);
+  border-color: rgba(249, 209, 144, .65);
+  transform: translateX(3px);
+}
+.modal-confirm:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 5px;
+  border-radius: 999px;
 }
 
 .modal-close {
@@ -590,6 +655,13 @@ input, textarea { font-family: inherit; }
   60%  { transform: scale(1.16); opacity: 1; }
   80%  { transform: scale(.94);              }
   100% { transform: scale(1);                }
+}
+
+/* Pulse sur le contour du bouton "En savoir plus" (un cycle, puis s'arrête) */
+@keyframes learnMorePulse {
+  0%   { box-shadow: 0 0 0 0   rgba(185, 87, 18, .55); }
+  60%  { box-shadow: 0 0 0 7px rgba(185, 87, 18, 0);   }
+  100% { box-shadow: 0 0 0 0   rgba(185, 87, 18, 0);   }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }

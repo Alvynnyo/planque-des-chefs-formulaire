@@ -198,6 +198,21 @@ function renderQuestionContent(index) {
   document.getElementById('btn-learn-more-label').textContent = t('learnMore');
   if (question.options) {
     btnLearnMore.classList.remove('hidden');
+    /* Pulse discret d'appel à l'action (un seul cycle par question) */
+    if (!prefersReducedMotion) {
+      btnLearnMore.classList.remove('is-pulsing');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          btnLearnMore.classList.add('is-pulsing');
+          /* Auto-retrait après le cycle pour permettre la réactivation à la question suivante */
+          const onEnd = () => {
+            btnLearnMore.classList.remove('is-pulsing');
+            btnLearnMore.removeEventListener('animationend', onEnd);
+          };
+          btnLearnMore.addEventListener('animationend', onEnd);
+        });
+      });
+    }
   } else {
     btnLearnMore.classList.add('hidden');
   }
@@ -350,7 +365,7 @@ function initQuizNavigation() {
     const visible  = getVisibleQuestions();
     const question = visible[state.currentStep];
     if (question && question.options) {
-      openModal(question.options[state.lang] || question.options.fr);
+      openModal(question);
     }
   });
 }
@@ -359,7 +374,10 @@ function initQuizNavigation() {
    MODAL "En savoir plus"
    ============================================================ */
 
-function openModal(options) {
+function openModal(question) {
+  const options    = question.options[state.lang] || question.options.fr;
+  const isMultiple = !!question.multiple;
+
   const overlay = document.getElementById('modal-overlay');
   const titleEl = document.getElementById('modal-title');
   const listEl  = document.getElementById('modal-options');
@@ -367,11 +385,72 @@ function openModal(options) {
   titleEl.textContent = t('suggestionsTitle');
   listEl.innerHTML    = '';
 
+  /* Supprimer le bouton Valider d'une ouverture précédente */
+  const prevConfirm = document.getElementById('modal-confirm-btn');
+  if (prevConfirm) prevConfirm.remove();
+
+  /* Lire la valeur actuelle du champ pour resynchroniser l'état des chips */
+  const field        = document.getElementById('answer-field');
+  const currentValue = field ? field.value.trim() : '';
+  const selectedOpts = isMultiple && currentValue
+    ? currentValue.split(',').map(v => v.trim()).filter(Boolean)
+    : [];
+
   options.forEach(opt => {
-    const li       = document.createElement('li');
-    li.textContent = opt;
-    listEl.appendChild(li);
+    const chip = document.createElement('li');
+    chip.className = 'modal-chip';
+    chip.setAttribute('role', 'button');
+    chip.setAttribute('tabindex', '0');
+
+    /* Checkmark SVG inline (caché par défaut via CSS, visible si .is-selected) */
+    chip.innerHTML =
+      '<svg class="modal-chip-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>' +
+      '<span>' + opt + '</span>';
+
+    /* Resynchroniser l'état visuel depuis la valeur déjà saisie dans le champ */
+    if (isMultiple && selectedOpts.includes(opt)) {
+      chip.classList.add('is-selected');
+    }
+
+    if (isMultiple) {
+      /* Sélection multiple : toggle + mise à jour du champ en temps réel */
+      const toggle = () => {
+        chip.classList.toggle('is-selected');
+        const selected = Array.from(listEl.querySelectorAll('.modal-chip.is-selected'))
+          .map(c => c.querySelector('span').textContent);
+        if (field) field.value = selected.join(', ');
+      };
+      chip.addEventListener('click', toggle);
+      chip.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    } else {
+      /* Sélection unique : remplir le champ avec le texte du chip + fermer la popup */
+      const select = () => {
+        if (field) field.value = opt;
+        closeModal();
+      };
+      chip.addEventListener('click', select);
+      chip.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); }
+      });
+    }
+
+    listEl.appendChild(chip);
   });
+
+  /* Bouton "Valider" pour les questions à choix multiple */
+  if (isMultiple) {
+    const confirmBtn     = document.createElement('button');
+    confirmBtn.id        = 'modal-confirm-btn';
+    confirmBtn.className = 'modal-confirm';
+    confirmBtn.type      = 'button';
+    confirmBtn.innerHTML =
+      '<span>' + t('validate') + '</span>' +
+      '<svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+    confirmBtn.addEventListener('click', closeModal);
+    listEl.after(confirmBtn);
+  }
 
   overlay.classList.add('is-open');
   overlay.setAttribute('aria-hidden', 'false');

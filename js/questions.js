@@ -9,6 +9,7 @@
      en        : libellé en anglais   (peut contenir {name})
      type      : 'text' | 'textarea'
      required  : boolean
+     multiple  : boolean | undefined — true = sélection multiple dans la popup
      options   : { fr: [...], en: [...] } | null  (pour la modal "En savoir plus")
      placeholder: { fr: string, en: string } | undefined
      conditional: { questionId, triggerValues } | undefined
@@ -24,6 +25,7 @@ const questions = [
     en: '{name}, what is your profile in the culinary field?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         'Chef ou traiteur en activité',
@@ -49,6 +51,7 @@ const questions = [
     en: '{name}, are you in compliance with MAPAQ (Ministère de l\'Agriculture, des Pêcheries et de l\'Alimentation du Québec) requirements?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         'Oui, déjà conforme',
@@ -67,13 +70,14 @@ const questions = [
     },
   },
 
-  /* 3 — Type de cuisine pratiquée */
+  /* 3 — Type de cuisine pratiquée (choix multiple) */
   {
     id: 'cuisineType',
     fr: '{name}, quel(s) type(s) de cuisine pratiquez-vous ?',
     en: '{name}, what type(s) of cuisine do you practice?',
     type: 'textarea',
     required: true,
+    multiple: true,
     options: {
       fr: [
         'Cuisine africaine / afro-caribéenne',
@@ -92,13 +96,14 @@ const questions = [
     },
   },
 
-  /* 4 — Équipements indispensables */
+  /* 4 — Équipements indispensables (choix multiple) */
   {
     id: 'essentialEquipment',
     fr: '{name}, quels équipements sont indispensables pour vous ?',
     en: '{name}, what equipment is essential for you?',
     type: 'textarea',
     required: true,
+    multiple: true,
     options: {
       fr: [
         'Plaques de cuisson pro',
@@ -134,6 +139,7 @@ const questions = [
     en: '{name}, do you need a dedicated storage space?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         'Oui, stockage sec',
@@ -159,6 +165,7 @@ const questions = [
     en: '{name}, how often do you plan to use the kitchen?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         '1 à 2 fois par mois',
@@ -177,13 +184,14 @@ const questions = [
     },
   },
 
-  /* 7 — Moments d'utilisation (non obligatoire) */
+  /* 7 — Moments d'utilisation (non obligatoire, choix multiple) */
   {
     id: 'usageTimes',
     fr: '{name}, à quels moments souhaitez-vous utiliser la cuisine ?',
     en: '{name}, at what times would you like to use the kitchen?',
     type: 'textarea',
     required: false,
+    multiple: true,
     options: {
       fr: [
         'Matin (6 h – 12 h)',
@@ -209,6 +217,7 @@ const questions = [
     en: '{name}, in which region are you looking for a kitchen?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         'Montréal',
@@ -244,6 +253,7 @@ const questions = [
     en: '{name}, would you be interested in the launch of La Planque des Chefs?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: ['Oui', 'Non', 'Peut-être'],
       en: ['Yes', 'No', 'Maybe'],
@@ -257,6 +267,7 @@ const questions = [
     en: '{name}, what is your monthly budget for renting a professional kitchen?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         'Moins de 500 $',
@@ -282,6 +293,7 @@ const questions = [
     en: '{name}, what rental format do you prefer?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         'À l\'heure',
@@ -304,13 +316,14 @@ const questions = [
     },
   },
 
-  /* 12 — Services complémentaires (non obligatoire) */
+  /* 12 — Services complémentaires (non obligatoire, choix multiple) */
   {
     id: 'additionalServices',
     fr: '{name}, quels services complémentaires vous intéresseraient ?',
     en: '{name}, which additional services would interest you?',
     type: 'textarea',
     required: false,
+    multiple: true,
     options: {
       fr: [
         'Location de matériel de contenu (caméra, trépied…)',
@@ -352,6 +365,7 @@ const questions = [
     en: '{name}, how do you currently find a kitchen to work in?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: [
         'Google',
@@ -381,6 +395,7 @@ const questions = [
     en: '{name}, how difficult is it to find a professional kitchen suited to your needs?',
     type: 'text',
     required: false,
+    multiple: false,
     options: {
       fr: [
         'Très facile',
@@ -406,6 +421,7 @@ const questions = [
     en: '{name}, would you like to be informed of the next steps in the La Planque des Chefs project?',
     type: 'text',
     required: true,
+    multiple: false,
     options: {
       fr: ['Oui', 'Non'],
       en: ['Yes', 'No'],

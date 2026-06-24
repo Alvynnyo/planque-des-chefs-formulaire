@@ -15,6 +15,7 @@ const i18n = {
     skip:     'Passer',
     learnMore:'En savoir plus',
     close:    'Fermer',
+    validate: 'Valider',
 
     // Écran de sélection de langue
     chooseLanguage: 'Choisissez votre langue / Choose your language',
@@ -51,6 +52,7 @@ const i18n = {
     skip:     'Skip',
     learnMore:'Learn more',
     close:    'Close',
+    validate: 'Confirm',
 
     // Language selection screen
     chooseLanguage: 'Choisissez votre langue / Choose your language',
