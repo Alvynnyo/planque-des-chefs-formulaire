@@ -13,7 +13,7 @@ const i18n = {
     sendNow:  'Envoyer',
     prev:     'Retour',
     skip:     'Passer',
-    learnMore:'En savoir plus',
+    learnMore:'Suggestions',
     close:    'Fermer',
     validate: 'Valider',
 
@@ -50,7 +50,7 @@ const i18n = {
     sendNow:  'Submit',
     prev:     'Back',
     skip:     'Skip',
-    learnMore:'Learn more',
+    learnMore:'Suggestions',
     close:    'Close',
     validate: 'Confirm',
 
