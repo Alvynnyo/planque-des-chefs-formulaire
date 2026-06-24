@@ -685,6 +685,34 @@ input, textarea { font-family: inherit; }
   66%       { transform: translate(-3%, -2%);}
 }
 
+/* ─── Écran d'introduction ───────────────────────────────── */
+
+.intro-body {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.intro-paragraph {
+  font-family: var(--font);
+  font-size: .95rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(249, 209, 144, .72);
+}
+
+/* Entrée en cascade : opacité + glissement vers le haut */
+.intro-anim-el {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.intro-anim-el.intro-is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ─── Mobile ─────────────────────────────────────────────── */
 
 @media (max-width: 640px) {

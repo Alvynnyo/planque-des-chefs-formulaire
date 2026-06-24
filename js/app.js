@@ -109,8 +109,8 @@ function initNameScreen() {
     state.currentStep     = 0;
     state.responses       = {};
     state.questionRendered = false;
-    showQuestion(0, 'forward');
-    showScreen('quiz');
+    initIntroScreen();
+    showScreen('intro');
   }
 
   /* Remplacer le bouton pour supprimer les anciens listeners */
@@ -123,6 +123,68 @@ function initNameScreen() {
   inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') proceed(); });
 
   setTimeout(() => inputEl.focus(), 50);
+}
+
+/* ============================================================
+   ÉCRAN 2b : Mise en contexte
+   ============================================================ */
+
+function initIntroScreen() {
+  /* Titre personnalisé avec le prénom saisi */
+  const titleEl = document.getElementById('intro-title');
+  titleEl.textContent = interpolate(t('introTitle'), { name: state.firstName });
+
+  /* Corps de texte : paragraphes injectés dynamiquement depuis i18n */
+  const bodyEl = document.getElementById('intro-body');
+  bodyEl.innerHTML = '';
+  (t('introParagraphs') || []).forEach(para => {
+    const p = document.createElement('p');
+    p.className   = 'intro-paragraph';
+    p.textContent = para;
+    bodyEl.appendChild(p);
+  });
+
+  /* Labels des boutons */
+  document.getElementById('btn-intro-next-label').textContent = t('next');
+  document.getElementById('btn-intro-prev-label').textContent = t('prev');
+
+  /* Remplacer les boutons pour éviter l'empilement de listeners */
+  ['btn-intro-next', 'btn-intro-prev'].forEach(id => {
+    const old   = document.getElementById(id);
+    const fresh = old.cloneNode(true);
+    old.parentNode.replaceChild(fresh, old);
+  });
+
+  /* SUIVANT → lancer le questionnaire (question 1/16) */
+  document.getElementById('btn-intro-next').addEventListener('click', () => {
+    showQuestion(0, 'forward');
+    showScreen('quiz');
+  });
+
+  /* RETOUR → retour à la saisie du prénom */
+  document.getElementById('btn-intro-prev').addEventListener('click', () => {
+    initNameScreen();
+    showScreen('name');
+  });
+
+  /* Animation d'entrée en cascade (respecte prefers-reduced-motion) */
+  const animEls = Array.from(document.querySelectorAll('#screen-intro .intro-anim-el'));
+  animEls.forEach(el => el.classList.remove('intro-is-visible'));
+
+  if (prefersReducedMotion) {
+    /* Apparition instantanée si l'utilisateur a désactivé les animations */
+    animEls.forEach(el => el.classList.add('intro-is-visible'));
+  } else {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        let delay = 0;
+        animEls.forEach(el => {
+          setTimeout(() => el.classList.add('intro-is-visible'), delay);
+          delay += 160;
+        });
+      });
+    });
+  }
 }
 
 /* ============================================================
