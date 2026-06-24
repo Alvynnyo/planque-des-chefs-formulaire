@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Formulaire interactif de La Planque des Chefs — bilingue FR/EN" />
+  <title>La Planque des Chefs — Formulaire</title>
+
+  <!-- Sinera : marque uniquement -->
+  <link href="https://fonts.cdnfonts.com/css/sinera" rel="stylesheet" />
+
+  <!-- Cormorant (titres de questions) + Outfit (compteur, boutons, labels) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;1,500;1,600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Halos ambiants d'arrière-plan -->
+  <div class="bg-shapes" aria-hidden="true">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+  </div>
+
+  <!-- Panneau de marque : fixe à droite (desktop) / bannière en haut (mobile) -->
+  <aside class="brand-panel" aria-hidden="true" role="presentation">
+    <img
+      src="assets/images/chef-cooking.png"
+      class="brand-panel-img"
+      alt=""
+      draggable="false"
+    />
+    <div class="brand-panel-overlay"></div>
+    <div class="brand-panel-content">
+      <span class="brand-panel-name">La Planque des Chefs</span>
+      <span class="brand-panel-tagline" id="brand-tagline">Étude des besoins</span>
+    </div>
+  </aside>
+
+  <div class="form-col">
+  <div id="app">
+
+    <!-- ============================================================
+         ÉCRAN 1 : Sélection de la langue
+         ============================================================ -->
+    <div id="screen-lang" class="screen active" role="main" aria-label="Sélection de la langue">
+      <div class="content-block">
+
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3C9.8 3 8 4.8 8 7C6.3 7 5 8.3 5 10C5 11.7 6.3 13 8 13H16C17.7 13 19 11.7 19 10C19 8.3 17.7 7 16 7C16 4.8 14.2 3 12 3Z" fill="currentColor"/>
+              <rect x="7" y="13" width="10" height="1.5" rx=".75" fill="currentColor"/>
+              <rect x="8" y="15" width="8" height="5" rx="1" fill="currentColor"/>
+              <rect x="10" y="20" width="4" height="1.5" rx=".75" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="brand-name">La Planque des Chefs</span>
+        </div>
+
+        <p class="lang-prompt">Choisissez votre langue / Choose your language</p>
+
+        <div class="flag-container">
+          <button class="flag-btn" data-lang="fr" aria-label="Continuer en français">
+            <span class="flag-img-wrap">
+              <img src="assets/flags/fr.svg" alt="Drapeau français" />
+            </span>
+            <span class="flag-label">Français</span>
+          </button>
+          <button class="flag-btn" data-lang="en" aria-label="Continue in English">
+            <span class="flag-img-wrap">
+              <img src="assets/flags/en.svg" alt="UK flag" />
+            </span>
+            <span class="flag-label">English</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         ÉCRAN 2 : Saisie du prénom
+         ============================================================ -->
+    <div id="screen-name" class="screen" role="main" aria-label="Saisie du prénom">
+      <div class="content-block">
+
+        <span class="q-counter brand-counter" aria-hidden="true">La Planque des Chefs</span>
+
+        <h1 id="name-question" class="question-label"></h1>
+
+        <div class="input-group">
+          <input
+            type="text"
+            id="name-input"
+            class="answer-input"
+            autocomplete="given-name"
+            maxlength="60"
+            aria-required="true"
+            aria-describedby="name-error"
+          />
+        </div>
+
+        <div id="name-error" class="error-msg hidden" role="alert"></div>
+
+        <div class="quiz-actions">
+          <nav class="quiz-nav">
+            <button id="btn-name-next" class="btn btn-next" type="button">
+              <span id="btn-name-next-label"></span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </nav>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         ÉCRAN 3 : Questions (wizard)
+         ============================================================ -->
+    <div id="screen-quiz" class="screen" role="main" aria-label="Questionnaire">
+      <div class="content-block question-card" id="question-block">
+
+        <!-- Compteur textuel "01 — 16" -->
+        <span id="q-counter" class="q-counter" role="status" aria-live="polite"></span>
+
+        <!-- Label de la question en Cormorant italique -->
+        <label id="question-label" class="question-label" for="answer-field"></label>
+
+        <!-- Champ de saisie injecté dynamiquement (input ou textarea) -->
+        <div id="input-wrapper" class="input-wrapper"></div>
+
+        <div id="field-error" class="error-msg hidden" role="alert"></div>
+
+        <!-- Bouton "En savoir plus" avec cercle icône -->
+        <button id="btn-learn-more" class="btn-learn-more hidden" type="button" aria-haspopup="dialog">
+          <span class="icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4M12 8h.01"/>
+            </svg>
+          </span>
+          <span id="btn-learn-more-label"></span>
+        </button>
+
+        <!-- Navigation -->
+        <div class="quiz-actions">
+          <nav class="quiz-nav" aria-label="Navigation">
+            <!-- RETOUR affiché à gauche (masqué sur Q1) -->
+            <button id="btn-prev" class="btn btn-prev hidden" type="button">
+              <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span id="btn-prev-label"></span>
+            </button>
+            <!-- SUIVANT / ENVOYER -->
+            <button id="btn-next" class="btn btn-next" type="button">
+              <span id="btn-next-label"></span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </nav>
+          <!-- PASSER (questions non obligatoires) -->
+          <button id="btn-skip" class="btn btn-skip hidden" type="button">
+            <span id="btn-skip-label"></span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         ÉCRAN 4 : Remerciements (envoi automatique)
+         ============================================================ -->
+    <div id="screen-end" class="screen" role="main" aria-label="Remerciements">
+      <div class="content-block">
+
+        <div id="end-loading" class="end-loading hidden" role="status">
+          <div class="spinner" aria-hidden="true"></div>
+        </div>
+
+        <div id="end-content" class="end-content hidden">
+          <div class="end-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <h1 id="end-message" class="end-title"></h1>
+          <p id="end-subtitle" class="end-subtitle"></p>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /#app -->
+  </div><!-- /.form-col -->
+
+
+  <!-- ============================================================
+       MODAL "En savoir plus" — thème sombre
+       ============================================================ -->
+  <div
+    id="modal-overlay"
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    aria-hidden="true"
+  >
+    <div class="modal-card" id="modal-card">
+
+      <button id="modal-close" class="modal-close" type="button" aria-label="Fermer / Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <h2 id="modal-title" class="modal-title"></h2>
+      <ul id="modal-options" class="modal-options"></ul>
+
+    </div>
+  </div>
+
+
+  <script src="js/i18n.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

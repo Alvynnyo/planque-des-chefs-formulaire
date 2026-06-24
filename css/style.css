@@ -1,0 +1,769 @@
+/* ============================================================
+   style.css — La Planque des Chefs
+   Thème éditorial sombre, minimaliste, style Typeform premium
+   ============================================================ */
+
+/* ─── Variables ──────────────────────────────────────────── */
+
+:root {
+  --color-bg:         #1F1410;
+  --color-text:       #F9D190;
+  --color-text-muted: rgba(249, 209, 144, .45);
+  --color-primary:    #B95712;
+
+  --font:       'Outfit', sans-serif;
+  --font-serif: 'Cormorant', serif;
+  --font-brand: 'Sinera', serif;
+
+  --dur-exit:  250ms;
+  --dur-enter: 300ms;
+  --dur-modal: 260ms;
+}
+
+/* ─── Reset / Base ───────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 { margin: 0; font-weight: normal; }
+p           { margin: 0; }
+ul, ol      { margin: 0; padding: 0; }
+button      { font-family: inherit; cursor: pointer; }
+input, textarea { font-family: inherit; }
+
+.hidden { display: none !important; }
+
+/* ─── Halos ambiants de fond ─────────────────────────────── */
+
+.bg-shapes {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--color-primary);
+  filter: blur(90px);
+}
+
+.bg-shape-1 {
+  width: 65vw; height: 65vw;
+  top: -20%; right: -12%;
+  opacity: .13;
+  animation: float1 20s ease-in-out infinite;
+}
+.bg-shape-2 {
+  width: 45vw; height: 45vw;
+  bottom: -18%; left: -12%;
+  opacity: .09;
+  animation: float2 25s ease-in-out infinite;
+}
+.bg-shape-3 {
+  width: 30vw; height: 30vw;
+  top: 38%; left: 42%;
+  opacity: .06;
+  animation: float3 30s ease-in-out infinite;
+}
+
+/* ─── Structure principale ───────────────────────────────── */
+
+#app { position: relative; z-index: 1; }
+
+.content-block {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ─── Écrans ─────────────────────────────────────────────── */
+
+.screen { display: none; }
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 60px clamp(28px, 10vw, 140px);
+  box-sizing: border-box;
+}
+
+/* Masquer le débordement horizontal pour les animations glissantes */
+#screen-quiz.active {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* ─── Marque (écran langue) ──────────────────────────────── */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 52px;
+}
+
+.brand-icon {
+  width: 34px; height: 34px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+.brand-icon svg { width: 100%; height: 100%; display: block; }
+
+.brand-name {
+  font-family: var(--font-brand);
+  font-size: 1.35rem;
+  color: var(--color-text);
+  letter-spacing: .04em;
+}
+
+/* ─── Invite de langue ───────────────────────────────────── */
+
+.lang-prompt {
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: .72rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 36px;
+}
+
+/* ─── Drapeaux ───────────────────────────────────────────── */
+
+.flag-container {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.flag-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: rgba(249, 209, 144, .05);
+  border: 1px solid rgba(249, 209, 144, .14);
+  border-radius: 12px;
+  padding: 20px 28px;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .18s ease;
+}
+.flag-btn:hover {
+  background: rgba(249, 209, 144, .10);
+  border-color: rgba(249, 209, 144, .38);
+  transform: translateY(-2px);
+}
+.flag-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.flag-img-wrap {
+  width: 48px; height: 34px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.flag-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.flag-label {
+  font-family: var(--font);
+  font-size: .68rem;
+  font-weight: 400;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ─── Compteur de progression ────────────────────────────── */
+
+.q-counter {
+  display: block;
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: .68rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 28px;
+}
+
+/* Variante nom de marque sur l'écran prénom */
+.brand-counter {
+  font-family: var(--font-brand);
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: none;
+}
+
+/* ─── Label de question (Cormorant italique) ─────────────── */
+
+.question-label {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.9rem, 4.8vw, 3.1rem);
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--color-text);
+  margin-bottom: 36px;
+}
+
+/* ─── Champs de saisie — bordure basse uniquement ────────── */
+
+.input-group,
+.input-wrapper {
+  width: 100%;
+  max-width: 480px;
+}
+
+.answer-input {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(249, 209, 144, .25);
+  border-radius: 0;
+  padding: 14px 0 12px;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--color-text);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color .25s ease, border-width .25s ease;
+  caret-color: var(--color-primary);
+}
+.answer-input::placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+.answer-input:focus {
+  border-bottom-color: var(--color-primary);
+  border-bottom-width: 2px;
+  padding-bottom: 11px;
+}
+
+.answer-textarea {
+  resize: none;
+  min-height: 96px;
+}
+
+/* ─── Messages d'erreur ──────────────────────────────────── */
+
+.error-msg {
+  font-family: var(--font);
+  font-size: .72rem;
+  font-weight: 400;
+  letter-spacing: .04em;
+  color: #FF8B7A;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* ─── Bouton "En savoir plus" ────────────────────────────── */
+
+.btn-learn-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-family: var(--font);
+  font-size: .66rem;
+  font-weight: 400;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-top: 28px;
+  transition: color .2s ease;
+}
+.btn-learn-more:hover { color: var(--color-text); }
+.btn-learn-more:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+
+.icon-circle {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(249, 209, 144, .18);
+  background: rgba(249, 209, 144, .06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .2s ease, border-color .2s ease;
+}
+.btn-learn-more:hover .icon-circle {
+  background: rgba(249, 209, 144, .12);
+  border-color: rgba(249, 209, 144, .36);
+}
+.icon-circle svg { width: 15px; height: 15px; }
+
+/* ─── Navigation ─────────────────────────────────────────── */
+
+.quiz-actions {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.quiz-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Base commune à tous les boutons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  border: none;
+  background: none;
+  padding: 0;
+  transition: color .2s ease, background .2s ease,
+              border-color .2s ease, transform .18s ease, opacity .2s ease;
+  white-space: nowrap;
+}
+.btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+
+/* SUIVANT / ENVOYER — pilule avec contour fin */
+.btn-next {
+  padding: 12px 26px;
+  color: var(--color-text);
+  border: 1px solid rgba(249, 209, 144, .35);
+  border-radius: 999px;
+  gap: 12px;
+}
+.btn-next:hover:not(:disabled) {
+  background: rgba(249, 209, 144, .07);
+  border-color: rgba(249, 209, 144, .65);
+  transform: translateX(3px);
+}
+
+/* RETOUR — texte simple, lettres espacées */
+.btn-prev {
+  color: var(--color-text-muted);
+  gap: 8px;
+}
+.btn-prev:hover:not(:disabled) {
+  color: var(--color-text);
+  transform: translateX(-3px);
+}
+
+/* PASSER — texte muted, plus petit */
+.btn-skip {
+  color: var(--color-text-muted);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  font-weight: 400;
+}
+.btn-skip:hover:not(:disabled) { color: var(--color-text); }
+
+/* Flèche inline dans les boutons */
+.btn-arrow {
+  width: 17px; height: 17px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+}
+
+/* ─── Écran de fin ───────────────────────────────────────── */
+
+.end-loading { display: flex; align-items: center; }
+
+.spinner {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(249, 209, 144, .12);
+  border-top-color: var(--color-primary);
+  animation: spin .85s linear infinite;
+}
+
+.end-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.end-content.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.end-icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(185, 87, 18, .14);
+  border: 1px solid rgba(185, 87, 18, .42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+.end-icon svg { width: 22px; height: 22px; }
+.end-content.is-revealed .end-icon { animation: popIn .55s ease .1s both; }
+
+.end-title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--color-text);
+}
+
+.end-subtitle {
+  font-family: var(--font);
+  font-size: .88rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--color-text-muted);
+  max-width: 380px;
+}
+
+/* ─── Modal "En savoir plus" — thème sombre ──────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 5, 3, .72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-modal) ease;
+}
+.modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #2A1D15;
+  border: 1px solid rgba(249, 209, 144, .11);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(.93) translateY(14px);
+  opacity: 0;
+  transition: transform var(--dur-modal) ease, opacity var(--dur-modal) ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(249, 209, 144, .15) transparent;
+}
+.modal-card::-webkit-scrollbar { width: 4px; }
+.modal-card::-webkit-scrollbar-thumb {
+  background: rgba(249, 209, 144, .18);
+  border-radius: 4px;
+}
+
+.modal-overlay.is-open .modal-card {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.3rem;
+  color: var(--color-text);
+  margin-bottom: 20px;
+  padding-right: 36px;
+  line-height: 1.3;
+}
+
+.modal-options {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.modal-options li {
+  font-family: var(--font);
+  font-size: .82rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: rgba(249, 209, 144, .04);
+  border-left: 2px solid rgba(185, 87, 18, .5);
+  padding: 10px 14px;
+  border-radius: 0 5px 5px 0;
+}
+
+.modal-close {
+  position: absolute;
+  top: 18px; right: 18px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(249, 209, 144, .06);
+  border: 1px solid rgba(249, 209, 144, .14);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+.modal-close svg { width: 15px; height: 15px; }
+.modal-close:hover {
+  background: rgba(249, 209, 144, .12);
+  border-color: rgba(249, 209, 144, .35);
+  color: var(--color-text);
+}
+.modal-close:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+/* ─── Animations de transition de questions ──────────────── */
+
+.question-card.is-exiting-forward  { animation: slideOutLeft  var(--dur-exit)  forwards ease-in; }
+.question-card.is-exiting-backward { animation: slideOutRight var(--dur-exit)  forwards ease-in; }
+.question-card.is-entering-forward { animation: slideInRight  var(--dur-enter) forwards ease-out; }
+.question-card.is-entering-backward{ animation: slideInLeft   var(--dur-enter) forwards ease-out; }
+
+/* ─── Keyframes ──────────────────────────────────────────── */
+
+@keyframes slideOutLeft  { to { transform: translateX(-56px); opacity: 0; } }
+@keyframes slideOutRight { to { transform: translateX(56px);  opacity: 0; } }
+@keyframes slideInRight  { from { transform: translateX(56px);  opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes slideInLeft   { from { transform: translateX(-56px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@keyframes popIn {
+  0%   { transform: scale(0);    opacity: 0; }
+  60%  { transform: scale(1.16); opacity: 1; }
+  80%  { transform: scale(.94);              }
+  100% { transform: scale(1);                }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0);    }
+  50%       { transform: translate(-3%, 4%);}
+}
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0);         }
+  40%       { transform: translate(3%, -4%);     }
+  80%       { transform: translate(-2%, 2.5%);   }
+}
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0);    }
+  33%       { transform: translate(2%, 3%); }
+  66%       { transform: translate(-3%, -2%);}
+}
+
+/* ─── Mobile ─────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .screen.active {
+    padding: 44px 24px;
+    justify-content: flex-start;
+  }
+  .content-block { max-width: 100%; }
+  .question-label { font-size: clamp(1.65rem, 7.5vw, 2.2rem); margin-bottom: 28px; }
+  .answer-input { font-size: 1.1rem; }
+  .input-group, .input-wrapper { max-width: 100%; }
+  .flag-container { gap: 14px; }
+  .flag-btn { padding: 16px 20px; }
+  .modal-card { padding: 28px 20px; }
+  .quiz-actions { margin-top: 36px; }
+  .brand { margin-bottom: 40px; }
+}
+
+/* ─── Layout deux colonnes ───────────────────────────────── */
+
+/* Mobile-first: la colonne formulaire prend toute la largeur */
+.form-col {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Panneau de marque — mobile : bannière haute ────────── */
+
+.brand-panel {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  flex-shrink: 0;
+  animation: fadeIn .9s ease both;
+}
+
+.brand-panel-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+.brand-panel-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(31, 20, 16, 0.92) 0%,
+    rgba(31, 20, 16, 0.45) 40%,
+    rgba(31, 20, 16, 0.15) 65%,
+    transparent 100%
+  );
+}
+
+.brand-panel-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 20px clamp(24px, 10vw, 48px) 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand-panel-name {
+  font-family: var(--font-brand);
+  font-size: 1.4rem;
+  color: var(--color-text);
+  letter-spacing: .04em;
+  display: block;
+  line-height: 1.2;
+}
+
+.brand-panel-tagline {
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: .6rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  display: block;
+}
+
+/* ─── Desktop ≥ 1024px : panneau fixe à droite ───────────── */
+
+@media (min-width: 1024px) {
+  /* Formulaire : 60 % gauche */
+  .form-col {
+    width: 60%;
+  }
+
+  /* Panneau : 40 % droit, position fixe, pleine hauteur */
+  .brand-panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: 40%;
+    height: 100vh;
+    z-index: 10;
+  }
+
+  /* Gradient identique mais sur toute la hauteur */
+  .brand-panel-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(31, 20, 16, 0.92) 0%,
+      rgba(31, 20, 16, 0.3)  45%,
+      transparent 70%
+    );
+  }
+
+  /* Texte en bas du panneau, padding interne généreux */
+  .brand-panel-content {
+    padding: 0 44px 44px;
+    gap: 8px;
+  }
+
+  .brand-panel-name {
+    font-size: 2.1rem;
+  }
+
+  .brand-panel-tagline {
+    font-size: .66rem;
+  }
+
+  /* Formulaire : padding droit réduit pour maximiser l'espace texte */
+  .screen.active {
+    padding: 60px 40px 60px clamp(28px, 10vw, 140px);
+  }
+}
+
+/* ─── Petits téléphones : bannière plus compacte ─────────── */
+
+@media (max-width: 400px) {
+  .brand-panel { height: 170px; }
+}
+
+/* ─── Keyframe d'entrée du panneau ──────────────────────────*/
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── prefers-reduced-motion ─────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .bg-shape { animation: none !important; }
+}
